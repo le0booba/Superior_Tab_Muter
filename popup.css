@@ -203,8 +203,8 @@ h4 {
 .lang-switcher {
     display: flex;
     gap: 6px;
-    margin-bottom: 20px;
-    margin-top: 15px;
+    margin-bottom: 8px;
+    margin-top: 8px;
 }
 
 .lang-btn {
