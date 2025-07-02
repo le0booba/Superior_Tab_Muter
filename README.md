@@ -134,16 +134,16 @@ The extension icon changes to show the current state:
 ### File Structure
 ```
 Superior_Tab_Mute/
-├── 📄 manifest.json      # Extension configuration
-├── ⚙️ background.js       # Core muting logic & event handling
-├── 🎨 popup.html         # User interface structure
-├── 🎯 popup.js           # Interface logic & user interactions
-├── 💅 popup.css          # Modern dark theme styling
-├── 🖼️ icons/             # Status indicator icons
-│   ├── icon16.png        # Normal state
-│   ├── icon16_off.png    # Disabled state
-│   └── icon16_mute.png   # All muted state
-└── 📚 README.md          # This documentation
+├── 📑 manifest.json      # Extension configuration
+├── 🔧 background.js      # Core muting logic & event handling
+├── ⚙️ popup.html         # User interface structure
+├── ⚙️ popup.js           # Interface logic & user interactions
+├── 🎨 popup.css          # Modern dark theme styling
+├── 🗁 icons/ 🖼️          # Status indicator icons
+│   ├── icon16.png         # Normal state
+│   ├── icon16_off.png     # Disabled state
+│   └── icon16_mute.png    # All muted state
+└── 🖺 README.md           # This documentation
 ```
 
 ---
