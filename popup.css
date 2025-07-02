@@ -14,26 +14,6 @@ body {
     margin-bottom: 4px;
     font-size: 9px;
 }
-.header-icon-title {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 60px;
-}
-.muting-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 2px;
-}
-h3 {
-    margin: 0;
-    padding: 0;
-    font-size: 16px;
-    font-weight: 600;
-    color: #ecf0f1;
-    text-align: center;
-}
 
 .app-info {
     display: flex;
@@ -53,14 +33,16 @@ h3 {
     color: #7f8c8d;
 }
 
-.muting-mode-title {
-    font-size: 12px;
-    font-weight: 500;
-    margin-top: 2px;
-    color: #b2dfdb;
-    text-align: center;
-    width: 100%;
-    display: block;
+.master-toggle-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.master-toggle-container .toggle-switch {
+    margin-bottom: 0;
+    margin-left: 8px;
 }
 
 .toggle-switch {
@@ -93,21 +75,38 @@ h3 {
 }
 input:checked + .slider { background: #3498db; }
 input:checked + .slider:before { transform: translateX(18px); }
-.toggle-label { margin-left: 8px; font-size: 14px; color: #ecf0f1; }
+.toggle-label { 
+    margin-left: 8px; 
+    font-size: 14px; 
+    color: #ecf0f1;
+}
 
 #controls-wrapper.disabled { opacity: 0.5; pointer-events: none; }
 
 #controls-wrapper { border-top: 1px solid #34495e; padding-top: 20px; }
 
-form label { display: block; margin-bottom: 8px; cursor: pointer; }
-input[type="radio"] { margin-right: 8px; vertical-align: middle; accent-color: #3498db; }
+form label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+input[type="radio"] {
+    margin-right: 8px;
+    vertical-align: middle;
+    accent-color: #3498db;
+}
 
 #first-sound-controls.hidden { display: none; }
+
+#first-sound-controls {
+    margin-top: 16px;
+}
 
 #refresh-first-sound-btn { 
     width: 100%; 
     padding: 10px 10px; 
-    font-size: 14px; 
+    font-size: 12px; 
     color: #fff; 
     background: #40739e; 
     border: none; 
@@ -116,11 +115,21 @@ input[type="radio"] { margin-right: 8px; vertical-align: middle; accent-color: #
     text-align: center; 
     transition: background 0.2s; 
     margin-top: 8px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 #refresh-first-sound-btn:hover { background: #5a8ac6; }
 
+.refresh-btn-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
 #current-sound-source-display {
-    margin-top: 15px;
+    margin-top: 8px;
     padding: 8px 10px;
     background: #34495e;
     border-radius: 4px;
@@ -134,7 +143,10 @@ input[type="radio"] { margin-right: 8px; vertical-align: middle; accent-color: #
 #current-sound-source-display.active { color: #ecf0f1; font-weight: 500; }
 #current-sound-source-display.error { color: #e74c3c; }
 
-h4 { margin-top: 12px; padding-bottom: 6px; margin-bottom: 10px; }
+h4 { 
+    margin-top: 12px; 
+    margin-bottom: 12px;
+}
 #audible-tabs-list { list-style: none; padding: 0; margin: 0; max-height: 150px; overflow-y: auto; border: 1px solid #34495e; border-radius: 4px; }
 #audible-tabs-list li { padding: 8px 12px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.2s, color 0.2s; border-bottom: 1px solid #34495e; }
 #audible-tabs-list li:last-child { border-bottom: none; }
@@ -142,23 +154,71 @@ h4 { margin-top: 12px; padding-bottom: 6px; margin-bottom: 10px; }
 #audible-tabs-list li.selected { background: #3498db; font-weight: bold; color: #fff; border-color: #3498db; }
 .no-sound { font-style: italic; color: #95a5a6; cursor: default !important; padding: 8px 12px; border-bottom: none !important; background: none !important; }
 
-.header + div[style] {
+#github-link {
+    font-size: 13px;
+    color: #2980b9;
+    text-decoration: underline;
+    margin-top: 2px;
+    display: inline-block;
+}
+
+.show-all-tabs-label {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.spacer-8 {
     height: 8px;
 }
 
-#whitelist-section label[for="show-all-tabs-whitelist"] {
-    margin-top: 12px;
-    margin-bottom: 4px;
+#first-sound-tabs-list {
+    list-style: none;
+    padding: 0;
+    max-height: 120px;
+    overflow-y: auto;
+    border: 1px solid #34495e;
+    border-radius: 4px;
+    margin-top: 16px;
+}
+#first-sound-tabs-list li {
+    padding: 8px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background 0.2s, color 0.2s;
+    border-bottom: 1px solid #34495e;
+}
+#first-sound-tabs-list li:last-child { border-bottom: none; }
+#first-sound-tabs-list li:hover { background: #4a637d; }
+#first-sound-tabs-list li.selected {
+    background: #3498db;
+    font-weight: bold;
+    color: #fff;
+    border-color: #3498db;
 }
 
-label[for="show-all-tabs-first-sound"] {
-    margin-top: 12px;
-    margin-bottom: 4px;
+.lang-switcher {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    margin-top: 15px;
 }
 
-/* Align checkbox with text */
-input#show-all-tabs-whitelist,
-input#show-all-tabs-first-sound {
-    vertical-align: middle;
-    margin-right: 8px;
+.lang-btn {
+    background: transparent;
+    border: 1.5px solid #3498db;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 2px 10px;
+    font-size: 15px;
+    color: #3498db;
+    transition: background 0.2s, color 0.2s;
+}
+
+.lang-btn.active {
+    background: #34495e;
+    color: #fff;
 }

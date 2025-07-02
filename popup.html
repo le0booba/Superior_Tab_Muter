@@ -25,12 +25,17 @@
                 <a id="github-link" href="https://github.com/le0booba/Superior_Tab_Mute" target="_blank" style="font-size:13px;color:#2980b9;text-decoration:underline;margin-top:2px;">Page on GitHub</a>
             </div>
         </div>
-        <div style="height:8px;"></div>
-        <label class="toggle-switch">
-            <input type="checkbox" id="master-toggle-switch">
-            <span class="slider"></span>
+        <div class="lang-switcher">
+            <button class="lang-btn" id="lang-en">🇺🇸</button>
+            <button class="lang-btn" id="lang-ru">🇷🇺</button>
+        </div>
+        <div class="master-toggle-container">
             <span class="toggle-label">Master Toggle</span>
-        </label>
+            <label class="toggle-switch">
+                <input type="checkbox" id="master-toggle-switch">
+                <span class="slider"></span>
+            </label>
+        </div>
         <div id="controls-wrapper">
             <label class="toggle-switch">
                 <input type="checkbox" id="mute-all-toggle-switch">
@@ -44,11 +49,11 @@
             </form>
             <div id="first-sound-controls" class="hidden">
                 <button id="refresh-first-sound-btn">
-                    <span style="font-size:15px;vertical-align:middle;">🎵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <span style="vertical-align:middle;font-size:11px;font-stretch:semi-expanded;">CURRENT 🡪 SOURCE</span>
+                    <span style="font-size:15px;vertical-align:middle;">🎵</span>
+                    <span style="vertical-align:middle;">CURRENT Tab 🡪 SOURCE</span>
                 </button>
                 <div id="current-sound-source-display">No sound source designated.</div>
-                <div>
+                <div style="margin-top:8px;">
                     <label style="font-size:13px;">
                         <input type="checkbox" id="show-all-tabs-first-sound">
                         Show all tabs

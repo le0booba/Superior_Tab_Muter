@@ -16,14 +16,28 @@ const getSettings = () => chrome.storage.sync.get({
     isAllMuted: false,
     isBlacklistMode: false
 });
-const setMute = (tabs, mute) => Promise.all(tabs.map(tab => (tab.mutedInfo && tab.mutedInfo.muted !== mute) ? chrome.tabs.update(tab.id, { muted: mute }).catch(()=>{}) : null));
+
+const setMute = (tabs, mute) => Promise.all(
+    tabs.map(tab =>
+        tab.mutedInfo && tab.mutedInfo.muted !== mute
+            ? chrome.tabs.update(tab.id, { muted: mute }).catch(() => {})
+            : null
+    )
+);
+
 const getTabs = q => chrome.tabs.query(q);
 
-async function unmuteAllTabs() { await setMute(await getTabs({}), false); }
-async function muteAllTabs() { await setMute(await getTabs({}), true); }
+async function unmuteAllTabs() { 
+    await setMute(await getTabs({}), false); 
+}
+
+async function muteAllTabs() { 
+    await setMute(await getTabs({}), true); 
+}
 
 async function applyMutingRules() {
     const s = await getSettings();
+    
     if (!s.isExtensionEnabled) return unmuteAllTabs();
     if (s.isAllMuted) return muteAllTabs();
 
@@ -35,21 +49,20 @@ async function applyMutingRules() {
         case 'active':
             tabToUnmuteId = activeTab && activeTab.id;
             break;
+            
         case 'first-sound':
-            const { firstAudibleTabId } = s;
-            const tabExists = allTabs.some(t => t.id === firstAudibleTabId);
-            if (firstAudibleTabId && tabExists) {
-                tabToUnmuteId = firstAudibleTabId;
+            if (s.firstAudibleTabId && allTabs.some(t => t.id === s.firstAudibleTabId)) {
+                tabToUnmuteId = s.firstAudibleTabId;
             } else if (activeTab && activeTab.audible) {
                 await chrome.storage.sync.set({ firstAudibleTabId: activeTab.id });
                 tabToUnmuteId = activeTab.id;
-            } else {
-                // Не устанавливаем tabToUnmuteId, все вкладки будут заглушены
             }
             break;
+            
         case 'whitelist':
             tabToUnmuteId = s.whitelistedTabId;
             break;
+            
         case 'blacklist':
             tabToMuteId = s.blacklistedTabId;
             break;
@@ -57,28 +70,38 @@ async function applyMutingRules() {
 
     for (const tab of allTabs) {
         if (!tab.id || tab.url.startsWith('chrome://')) continue;
-        let shouldMute;
-        if (s.mode === 'blacklist') {
-            shouldMute = (tab.id === tabToMuteId);
-        } else {
-            shouldMute = (tab.id !== tabToUnmuteId);
-        }
+        
+        let shouldMute = s.mode === 'blacklist'
+            ? (tab.id === tabToMuteId)
+            : (tab.id !== tabToUnmuteId);
+            
         if (tab.mutedInfo && tab.mutedInfo.muted !== shouldMute) {
-            try { await chrome.tabs.update(tab.id, { muted: shouldMute }); } catch {}
+            try { 
+                await chrome.tabs.update(tab.id, { muted: shouldMute }); 
+            } catch {}
         }
     }
 }
 
 chrome.tabs.onActivated.addListener(applyMutingRules);
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
     if ('audible' in changeInfo || 'active' in changeInfo) {
         applyMutingRules();
     }
 });
-chrome.tabs.onRemoved.addListener(async (tabId) => {
-    const s = await chrome.storage.sync.get(['mode', 'firstAudibleTabId', 'whitelistedTabId', 'blacklistedTabId', 'isExtensionEnabled']);
-    if (!s.isExtensionEnabled) return;
 
+chrome.tabs.onRemoved.addListener(async (tabId) => {
+    const s = await chrome.storage.sync.get([
+        'mode', 
+        'firstAudibleTabId', 
+        'whitelistedTabId', 
+        'blacklistedTabId', 
+        'isExtensionEnabled'
+    ]);
+    
+    if (!s.isExtensionEnabled) return;
+    
     if (s.mode === 'first-sound' && tabId === s.firstAudibleTabId) {
         await chrome.storage.sync.remove('firstAudibleTabId');
     } else if (s.mode === 'whitelist' && tabId === s.whitelistedTabId) {
@@ -86,12 +109,15 @@ chrome.tabs.onRemoved.addListener(async (tabId) => {
     } else if (s.mode === 'blacklist' && tabId === s.blacklistedTabId) {
         await chrome.storage.sync.remove('blacklistedTabId');
     }
+    
     applyMutingRules();
 });
+
 chrome.storage.onChanged.addListener(applyMutingRules);
 
 function updateExtensionIcon(isEnabled, isAllMuted) {
     let path;
+    
     if (!isEnabled) {
         path = {
             16: 'icons/icon16_off.png',
@@ -111,6 +137,7 @@ function updateExtensionIcon(isEnabled, isAllMuted) {
             128: 'icons/icon128.png'
         };
     }
+    
     chrome.action.setIcon({ path });
 }
 
