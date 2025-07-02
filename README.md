@@ -1,7 +1,7 @@
 # Superior Tab Mute
 
 > *Advanced Chrome Extension for Intelligent Audio Control*
->
+> <br>
 > Superior Tab Mute automatically manages which tabs can play audio, reducing distractions and improving focus.
 <br>
 
