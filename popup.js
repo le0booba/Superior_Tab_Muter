@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const locales = {
         en: {
-            masterToggle: '❌ ⊶ ✔️',
+            masterToggle: '❌ / ✔️',
             muteAll: '🔇 ⦗ 🗗 ⦘',
             modeActive: 'Mute all except active tab',
             modeFirstSound: 'Mute all except first tab with sound',
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             github: 'Page on GitHub',
         },
         ru: {
-            masterToggle: '❌ ⊶ ✔️',
+            masterToggle: '❌ / ✔️',
             muteAll: '🔇 ⦗ 🗗 ⦘',
             modeActive: 'Заглушить все, кроме активной',
             modeFirstSound: 'Заглушить все, кроме 1ой со звуком',
