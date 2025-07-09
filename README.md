@@ -52,7 +52,7 @@
 ## 🚀 Quick Start
 
 ### Installation
-1. Download [LATEST RELEASE](https://github.com/le0booba/Superior_Tab_Mute/releases/latest) from GitHub.
+1. **Download [LATEST RELEASE](https://github.com/le0booba/Superior_Tab_Mute/releases/latest) from GitHub.**
 
 2. **Load in Chrome**
    - Navigate to `chrome://extensions/`
