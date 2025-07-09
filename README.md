@@ -1,6 +1,6 @@
 # Superior Tab Mute
 
-![demo](https://raw.githubusercontent.com/le0booba/Superior_Tab_Mute/refs/heads/main/ezgif-681dbbdcb43228.gif)
+![demo](https://raw.githubusercontent.com/le0booba/Superior_Tab_Mute/refs/heads/main/DEMO.gif)
 
 > *Advanced Chrome Extension for Intelligent Audio Control*
 > <br>
