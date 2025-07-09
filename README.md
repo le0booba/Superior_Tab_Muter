@@ -1,6 +1,6 @@
 # Superior Tab Mute
 
-![demo](https://raw.githubusercontent.com/le0booba/Superior_Tab_Mute/refs/heads/main/DEMO.gif)
+<img src="https://raw.githubusercontent.com/le0booba/Superior_Tab_Mute/refs/heads/main/DEMO.gif" alt="Databay showcase gif" title="Databay showcase gif" width="400"/>
 
 > *Advanced Chrome Extension for Intelligent Audio Control*
 > <br>
