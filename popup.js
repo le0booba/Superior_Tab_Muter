@@ -1,9 +1,10 @@
 // popup.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Setup ---
-    const getStorage = keys => new Promise(r => chrome.storage.sync.get(keys, r));
-    const setStorage = obj => new Promise(r => chrome.storage.sync.set(obj, r));
+    const getSync = keys => new Promise(r => chrome.storage.sync.get(keys, r));
+    const setSync = obj => new Promise(r => chrome.storage.sync.set(obj, r));
+    const getSession = keys => new Promise(r => chrome.storage.session.get(keys, r));
+    const setSession = obj => new Promise(r => chrome.storage.session.set(obj, r));
     const qs = sel => document.querySelector(sel);
 
     const locales = {
@@ -31,12 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
             modeWhitelist: 'Заглушить все, кроме выбранной',
             selectTabToUnmute: 'Выберите вкладку для звука:',
             showAllTabs: 'Показать все вкладки',
-            refreshSource: '🎵 Текущая Вкладка 🠆 ИСТОЧНИК',
+            refreshSource: '🎵 Текущая вкладка 🠆 ИСТОЧНИК',
             noTabs: 'Вкладки не найдены.',
             noSoundSource: 'Источник звука не назначен.',
             sourceClosed: 'Вкладка-источник закрыта.',
             sourcePrefix: 'ИСТОЧНИК:',
-            // by: 'от',
             github: 'Страница на GitHub'
         }
     };
@@ -44,13 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLang = localStorage.getItem('stm_lang') || 'en';
     const t = key => locales[currentLang][key] || locales['en'][key];
 
-    // --- DOM Elements ---
     const controlsWrapper = qs('#controls-wrapper');
     const firstSoundControls = qs('#first-sound-controls');
     const whitelistControls = qs('#whitelist-controls');
     const modeForm = qs('#mode-form');
 
-    // --- Localization ---
     function localizeUI() {
         document.querySelectorAll('[data-locale]').forEach(el => {
             el.textContent = t(el.dataset.locale);
@@ -60,14 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
         qs('#github-link').textContent = t('github');
     }
 
-    // --- UI Rendering ---
-
-    /**
-     * Renders a list of tabs into a given container element.
-     * Uses DocumentFragment for performance.
-     */
     function renderTabsList({ container, tabs, selectedId, onSelect }) {
-        container.innerHTML = ''; // Clear previous list
+        container.innerHTML = '';
         if (tabs.length === 0) {
             container.innerHTML = `<li class="no-sound">${t('noTabs')}</li>`;
             return;
@@ -86,11 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(fragment);
     }
     
-    /**
-     * Sets up a generic tab list section (for Whitelist or First Sound modes).
-     */
     async function setupTabListSection({ listElem, showAllCheckbox, storageKey, showAllKey, onSelect }) {
-        const { [storageKey]: selectedId } = await getStorage(storageKey);
+        const { [storageKey]: selectedId } = await getSession(storageKey);
         const showAll = localStorage.getItem(showAllKey) === 'true';
         showAllCheckbox.checked = showAll;
         
@@ -110,8 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function setupFirstSoundControls() {
-        // Update source display
-        const { firstAudibleTabId } = await getStorage('firstAudibleTabId');
+        const { firstAudibleTabId } = await getSession('firstAudibleTabId');
         const display = qs('#current-sound-source-display');
         display.className = '';
         if (firstAudibleTabId) {
@@ -127,13 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
             display.textContent = t('noSoundSource');
         }
 
-        // Setup tab list
         await setupTabListSection({
             listElem: qs('#first-sound-tabs-list'),
             showAllCheckbox: qs('#show-all-tabs-first-sound'),
             storageKey: 'firstAudibleTabId',
             showAllKey: 'showAllTabsFirstSound',
-            onSelect: tabId => setStorage({ firstAudibleTabId: tabId })
+            onSelect: tabId => setSession({ firstAudibleTabId: tabId })
         });
     }
 
@@ -143,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showAllCheckbox: qs('#show-all-tabs-whitelist'),
             storageKey: 'whitelistedTabId',
             showAllKey: 'showAllTabsWhitelist',
-            onSelect: tabId => setStorage({ whitelistedTabId: tabId })
+            onSelect: tabId => setSession({ whitelistedTabId: tabId })
         });
     }
 
@@ -154,22 +141,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mode === 'first-sound') setupFirstSoundControls();
         else if (mode === 'whitelist') setupWhitelistControls();
     }
-
-    // --- Event Handlers ---
     
     function attachEventListeners() {
         qs('#master-toggle-switch').onchange = e => {
             const isEnabled = e.target.checked;
-            setStorage({ isExtensionEnabled: isEnabled });
+            setSync({ isExtensionEnabled: isEnabled });
             controlsWrapper.classList.toggle('disabled', !isEnabled);
         };
         
-        qs('#mute-all-toggle-switch').onchange = e => setStorage({ isAllMuted: e.target.checked });
+        qs('#mute-all-toggle-switch').onchange = e => setSync({ isAllMuted: e.target.checked });
         
         modeForm.onchange = e => {
             if (e.target.name === 'mode') {
                 const newMode = e.target.value;
-                setStorage({ mode: newMode });
+                setSync({ mode: newMode });
                 updateUIVisibility(newMode);
             }
         };
@@ -177,8 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
         qs('#refresh-first-sound-btn').onclick = async () => {
             const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (activeTab) {
-                await setStorage({ firstAudibleTabId: activeTab.id });
-                setupFirstSoundControls(); // Refresh the display
+                await setSession({ firstAudibleTabId: activeTab.id });
+                setupFirstSoundControls();
             }
         };
 
@@ -192,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
             setupWhitelistControls();
         };
         
-        // Language Switcher
         qs('#lang-en').onclick = () => switchLanguage('en');
         qs('#lang-ru').onclick = () => switchLanguage('ru');
     }
@@ -206,25 +190,21 @@ document.addEventListener('DOMContentLoaded', () => {
         
         localizeUI();
         const currentMode = qs('input[name="mode"]:checked').value;
-        updateUIVisibility(currentMode); // Re-render lists with new text
+        updateUIVisibility(currentMode);
     }
 
-    // --- Initialization ---
     async function init() {
-        const data = await getStorage(['mode', 'isExtensionEnabled', 'isAllMuted']);
+        const data = await getSync(['mode', 'isExtensionEnabled', 'isAllMuted']);
         const isEnabled = data.isExtensionEnabled !== false;
         
-        // Set initial state from storage
         qs('#master-toggle-switch').checked = isEnabled;
         qs('#mute-all-toggle-switch').checked = data.isAllMuted === true;
         controlsWrapper.classList.toggle('disabled', !isEnabled);
         qs(`input[name="mode"][value="${data.mode || 'active'}"]`).checked = true;
 
-        // Set initial language
         qs('#lang-en').classList.toggle('active', currentLang === 'en');
         qs('#lang-ru').classList.toggle('active', currentLang === 'ru');
         
-        // Render UI
         localizeUI();
         attachEventListeners();
         updateUIVisibility(data.mode);

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Superior Tab Mute",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Advanced control over sound in browser.",
   "permissions": [
     "tabs",
@@ -38,7 +38,7 @@
     },
     "set-current-tab-source": {
       "suggested_key": {
-        "default": "Alt+Shift+F"
+        "default": "Alt+Shift+E"
       },
       "description": "Set current tab as sound source"
     }
