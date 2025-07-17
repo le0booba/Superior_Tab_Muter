@@ -15,10 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
             modeWhitelist: 'Mute all except a specific tab',
             selectTabToUnmute: 'Select a Tab to Unmute:',
             showAllTabs: 'Show all tabs',
-            refreshSource: 'Set Current Tab as Sound Source',
+            refreshSource: '🎵 Current Tab 🠆 SOURCE',
             noTabs: 'No tabs found.',
             noSoundSource: 'No sound source designated.',
             sourceClosed: 'Source tab has been closed.',
+            sourcePrefix: 'SOURCE:',
             by: 'by',
             github: 'Page on GitHub'
         },
@@ -30,10 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
             modeWhitelist: 'Заглушить все, кроме выбранной',
             selectTabToUnmute: 'Выберите вкладку для звука:',
             showAllTabs: 'Показать все вкладки',
-            refreshSource: 'Сделать текущую вкладку источ. звука',
+            refreshSource: '🎵 Текущая Вкладка 🠆 ИСТОЧНИК',
             noTabs: 'Вкладки не найдены.',
             noSoundSource: 'Источник звука не назначен.',
             sourceClosed: 'Вкладка-источник закрыта.',
+            sourcePrefix: 'ИСТОЧНИК:',
             // by: 'от',
             github: 'Страница на GitHub'
         }
@@ -93,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showAllCheckbox.checked = showAll;
         
         const query = showAll ? {} : { audible: true };
-        const tabs = (await chrome.tabs.query(query)).filter(t => t.id && !t.url.startsWith('chrome://'));
+        const tabs = (await chrome.tabs.query(query)).filter(t => t.id && !t.url.startsWith('chrome://') && !t.url.startsWith('chrome-extension://'));
 
         renderTabsList({
             container: listElem,
@@ -115,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (firstAudibleTabId) {
             try {
                 const tab = await chrome.tabs.get(firstAudibleTabId);
-                display.innerHTML = `<img src="${tab.favIconUrl || 'icons/icon16.png'}" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;">` + `SOURCE: ${tab.title}`;
+                display.innerHTML = `<img src="${tab.favIconUrl || 'icons/icon16.png'}" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;">` + `${t('sourcePrefix')} ${tab.title}`;
                 display.classList.add('active');
             } catch {
                 display.textContent = t('sourceClosed');

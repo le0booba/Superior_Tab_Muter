@@ -35,6 +35,12 @@
         "default": "Alt+Shift+M"
       },
       "description": "Toggle mute all tabs"
+    },
+    "set-current-tab-source": {
+      "suggested_key": {
+        "default": "Alt+Shift+F"
+      },
+      "description": "Set current tab as sound source"
     }
   }
 }

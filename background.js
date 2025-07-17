@@ -45,7 +45,7 @@ async function applyMutingRules() {
     const allTabs = await chrome.tabs.query({});
     
     // Filter out special tabs that cannot be muted
-    const manageableTabs = allTabs.filter(tab => tab.id && !tab.url.startsWith('chrome://'));
+    const manageableTabs = allTabs.filter(tab => tab.id && !tab.url.startsWith('chrome://') && !tab.url.startsWith('chrome-extension://'));
 
     // Handle global overrides first
     if (!s.isExtensionEnabled) {
@@ -156,10 +156,18 @@ updateExtensionIcon();
 
 // Listener for keyboard shortcuts.
 chrome.commands?.onCommand.addListener(async (command) => {
-    const { isExtensionEnabled, isAllMuted } = await getSettings();
+    const { isExtensionEnabled, isAllMuted, mode } = await getSettings();
     if (command === 'toggle-extension') {
         await chrome.storage.sync.set({ isExtensionEnabled: !isExtensionEnabled });
     } else if (command === 'toggle-mute-all') {
         await chrome.storage.sync.set({ isAllMuted: !isAllMuted });
+    } else if (command === 'set-current-tab-source') {
+        if (mode === 'first-sound') {
+            const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            if (activeTab) {
+                await chrome.storage.sync.set({ firstAudibleTabId: activeTab.id });
+                applyMutingRules();
+            }
+        }
     }
 });
