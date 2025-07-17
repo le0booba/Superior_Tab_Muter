@@ -10,56 +10,65 @@
     <div class="container">
         <div class="header">
             <div class="header-icon-title">
-                <span class="muting-icon" aria-label="Headphones" title="Muting Mode">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="12" fill="#27ae60"/>
-                        <path d="M6 17v-2a6 6 0 0 1 12 0v2" stroke="#fff" stroke-width="2" fill="none"/>
-                        <rect x="4" y="15" width="4" height="6" rx="2" fill="#fff"/>
-                        <rect x="16" y="15" width="4" height="6" rx="2" fill="#fff"/>
-                    </svg>
-                </span>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="12" fill="#27ae60"/>
+                    <path d="M6 17v-2a6 6 0 0 1 12 0v2" stroke="#fff" stroke-width="2" fill="none"/>
+                    <rect x="4" y="15" width="4" height="6" rx="2" fill="#fff"/>
+                    <rect x="16" y="15" width="4" height="6" rx="2" fill="#fff"/>
+                </svg>
             </div>
             <div class="app-info">
                 <span id="version-info"></span>
-                <span id="author-info">by badrenton</span>
-                <a id="github-link" href="https://github.com/le0booba/Superior_Tab_Mute" target="_blank" style="font-size:13px;color:#2980b9;text-decoration:underline;margin-top:2px;">Page on GitHub</a>
+                <span id="author-info"></span>
+                <a id="github-link" href="https://github.com/le0booba/Superior_Tab_Mute" target="_blank"></a>
             </div>
         </div>
+
         <div class="lang-switcher">
             <button class="lang-btn" id="lang-en">🇺🇸</button>
             <button class="lang-btn" id="lang-ru">🇷🇺</button>
         </div>
+
         <div class="master-toggle-container">
-            <span class="toggle-label">Master Toggle</span>
+            <span class="toggle-label" data-locale="masterToggle"></span>
             <label class="toggle-switch">
                 <input type="checkbox" id="master-toggle-switch">
                 <span class="slider"></span>
             </label>
         </div>
+
         <div id="controls-wrapper">
             <label class="toggle-switch">
                 <input type="checkbox" id="mute-all-toggle-switch">
                 <span class="slider"></span>
-                <span class="toggle-label">Mute All Tabs</span>
+                <span class="toggle-label" data-locale="muteAll"></span>
             </label>
+
             <form id="mode-form">
-                <label><input type="radio" name="mode" value="active">Mute all except active tab</label>
-                <label><input type="radio" name="mode" value="first-sound">Mute all except first tab with sound</label>
-                <label><input type="radio" name="mode" value="whitelist">Mute all except a specific tab</label>
+                <label><input type="radio" name="mode" value="active"><span data-locale="modeActive"></span></label>
+                <label><input type="radio" name="mode" value="first-sound"><span data-locale="modeFirstSound"></span></label>
+                <label><input type="radio" name="mode" value="whitelist"><span data-locale="modeWhitelist"></span></label>
             </form>
+
             <div id="first-sound-controls" class="hidden">
-                <button id="refresh-first-sound-btn">
-                    <span style="font-size:15px;vertical-align:middle;">🎵</span>
-                    <span style="vertical-align:middle;">CURRENT Tab 🡪 SOURCE</span>
-                </button>
-                <div id="current-sound-source-display">No sound source designated.</div>
-                <div style="margin-top:8px;">
-                    <label style="font-size:13px;">
-                        <input type="checkbox" id="show-all-tabs-first-sound">
-                        Show all tabs
-                    </label>
-                </div>
+                <button id="refresh-first-sound-btn" data-locale="refreshSource"></button>
+                <div id="current-sound-source-display"></div>
+                <label class="show-all-tabs-label">
+                    <input type="checkbox" id="show-all-tabs-first-sound">
+                    <span data-locale="showAllTabs"></span>
+                </label>
+                <ul id="first-sound-tabs-list"></ul>
             </div>
+
+            <div id="whitelist-controls" class="hidden">
+                <h4 data-locale="selectTabToUnmute"></h4>
+                 <label class="show-all-tabs-label">
+                    <input type="checkbox" id="show-all-tabs-whitelist">
+                    <span data-locale="showAllTabs"></span>
+                </label>
+                <ul id="audible-tabs-list"></ul>
+            </div>
+
         </div>
     </div>
     <script src="popup.js"></script>

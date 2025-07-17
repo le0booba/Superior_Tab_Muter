@@ -97,9 +97,9 @@ input[type="radio"] {
     accent-color: #3498db;
 }
 
-#first-sound-controls.hidden { display: none; }
+.hidden { display: none !important; }
 
-#first-sound-controls {
+#first-sound-controls, #whitelist-controls {
     margin-top: 16px;
 }
 
@@ -147,11 +147,11 @@ h4 {
     margin-top: 12px; 
     margin-bottom: 12px;
 }
-#audible-tabs-list { list-style: none; padding: 0; margin: 0; max-height: 150px; overflow-y: auto; border: 1px solid #34495e; border-radius: 4px; }
-#audible-tabs-list li { padding: 8px 12px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.2s, color 0.2s; border-bottom: 1px solid #34495e; }
-#audible-tabs-list li:last-child { border-bottom: none; }
-#audible-tabs-list li:hover { background: #4a637d; }
-#audible-tabs-list li.selected { background: #3498db; font-weight: bold; color: #fff; border-color: #3498db; }
+#audible-tabs-list, #first-sound-tabs-list { list-style: none; padding: 0; margin: 0; max-height: 150px; overflow-y: auto; border: 1px solid #34495e; border-radius: 4px; }
+#audible-tabs-list li, #first-sound-tabs-list li { padding: 8px 12px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.2s, color 0.2s; border-bottom: 1px solid #34495e; }
+#audible-tabs-list li:last-child, #first-sound-tabs-list li:last-child { border-bottom: none; }
+#audible-tabs-list li:hover, #first-sound-tabs-list li:hover { background: #4a637d; }
+#audible-tabs-list li.selected, #first-sound-tabs-list li.selected { background: #3498db; font-weight: bold; color: #fff; border-color: #3498db; }
 .no-sound { font-style: italic; color: #95a5a6; cursor: default !important; padding: 8px 12px; border-bottom: none !important; background: none !important; }
 
 #github-link {
@@ -167,37 +167,8 @@ h4 {
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-.spacer-8 {
-    height: 8px;
-}
-
-#first-sound-tabs-list {
-    list-style: none;
-    padding: 0;
-    max-height: 120px;
-    overflow-y: auto;
-    border: 1px solid #34495e;
-    border-radius: 4px;
-    margin-top: 16px;
-}
-#first-sound-tabs-list li {
-    padding: 8px 12px;
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: background 0.2s, color 0.2s;
-    border-bottom: 1px solid #34495e;
-}
-#first-sound-tabs-list li:last-child { border-bottom: none; }
-#first-sound-tabs-list li:hover { background: #4a637d; }
-#first-sound-tabs-list li.selected {
-    background: #3498db;
-    font-weight: bold;
-    color: #fff;
-    border-color: #3498db;
+    margin-top: 12px;
+    margin-bottom: 8px;
 }
 
 .lang-switcher {
