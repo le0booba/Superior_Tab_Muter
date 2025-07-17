@@ -1,6 +1,6 @@
 # Superior Tab Mute
 
-![demo](https://raw.githubusercontent.com/le0booba/Superior_Tab_Mute/refs/heads/main/ezgif-681dbbdcb43228.gif)
+<img src="https://raw.githubusercontent.com/le0booba/Superior_Tab_Mute/refs/heads/main/DEMO.gif" alt="Databay showcase gif" title="Databay showcase gif" width="400"/>
 
 > *Advanced Chrome Extension for Intelligent Audio Control*
 > <br>
@@ -52,7 +52,7 @@
 ## 🚀 Quick Start
 
 ### Installation
-1. Download [LATEST RELEASE](https://github.com/le0booba/Superior_Tab_Mute/releases/latest) from GitHub.
+1. **Download [LATEST RELEASE](https://github.com/le0booba/Superior_Tab_Mute/releases/latest) from GitHub.**
 
 2. **Load in Chrome**
    - Navigate to `chrome://extensions/`
