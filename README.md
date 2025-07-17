@@ -32,7 +32,7 @@
 - **Keyboard Shortcuts**: Control everything without touching your mouse
    - `Alt+Shift+S` - Toggle extension on/off
    - `Alt+Shift+M` - Mute/unmute all tabs
-   - `Alt+Shift+E` - Set Current Tab as Sound SOUURCE
+   - `Alt+Shift+E` - Set Current Tab as Sound `SOURCE`
 
 ### 🎨 **Intelligent Interface**
 - **Visual Status Indicators**: Extension icon shows current state at a glance
@@ -108,7 +108,7 @@ Emergency silence for any situation.
 |----------|--------|--------------|
 | `Alt+Shift+S` | Toggle extension on/off | ✅ |
 | `Alt+Shift+M` | Mute/unmute all tabs | ✅ |
-| `Alt+Shift+E` | Set Current Tab as Sound SOUURCE | ✅ |
+| `Alt+Shift+E` | Set Current Tab as Sound `SOURCE` | ✅ |
 
 </details>
 
