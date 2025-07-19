@@ -1,198 +1,170 @@
 # Superior Tab Mute
 
-<img src="https://raw.githubusercontent.com/le0booba/Superior_Tab_Mute/refs/heads/main/DEMO.gif" alt="Databay showcase gif" title="Databay showcase gif" width="400"/>
+**Advanced Chrome Extension for Intelligent Audio Control**
 
-> *Advanced Chrome Extension for Intelligent Audio Control*
-> <br>
-> Superior Tab Mute automatically manages which tabs can play audio, reducing distractions and improving focus.
-<br>
+<div align="center">
+   <img src="https://raw.githubusercontent.com/le0booba/Superior_Tab_Mute/refs/heads/main/screen-1.png" alt="Area Links Screenshot 1" width="200"/>
+</div>
+
+Superior Tab Mute provides sophisticated audio management for Chrome tabs, automatically muting tabs based on user-defined rules to reduce distractions and enhance focus. With multiple muting modes, intuitive controls, and a sleek interface, it’s ideal for work, streaming, or complex browsing workflows.
+
+<div align="center">
 
 ![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-blue?logo=googlechrome)
-<br>
-
-### Use Cases
-- Quick silence during calls or meetings
-- Temporary quiet during focused work
-- Override all other settings instantly
+</div>
 
 ---
 
-## 🌟 Key Features
+## 🚀 Installation
 
-### 🎯 **Smart Muting Modes**
-- **Active Tab Mode**: Only your current tab plays audio - perfect for focused browsing
-- **First Sound Mode**: The first tab that plays audio gets priority - ideal for music streaming
-- **Whitelist Mode**: Manually select which tab should play audio - complete control
-   
-   - Use "Show all tabs" to select from any tab, not just audible ones
-
-### ⚡ **Instant Controls**
-- **Master Toggle**: Enable/disable the entire extension instantly
-- **Global Mute**: Silence all tabs with one click or hotkey
-- **Keyboard Shortcuts**: Control everything without touching your mouse
-   - `Alt+Shift+S` - Toggle extension on/off
-   - `Alt+Shift+M` - Mute/unmute all tabs
-   - `Alt+Shift+E` - Set Current Tab as Sound `SOURCE`
-
-### 🎨 **Intelligent Interface**
-- **Visual Status Indicators**: Extension icon shows current state at a glance
-- **Real-time Tab Display**: See which tabs are playing audio
-- **Bilingual Support**: English and Russian localization
-   - Switch languages using the lang buttons in the popup 
-- **Dark Theme**: Easy on the eyes during long browsing sessions
-
-### 🔧 **Advanced Features**
-- **Dynamic Sound Source**: Easily reassign which tab plays audio
-- **Chrome Page Protection**: Safely handles system pages
-- **Persistent Settings**: Your preferences sync across devices
-- **Error Recovery**: Gracefully handles closed tabs and edge cases
-- The current source is displayed with favicon and URL preview
-
----
-
-## 🚀 Quick Start
-
-### Installation
-1. **Download [LATEST RELEASE](https://github.com/le0booba/Superior_Tab_Mute/releases/latest) from GitHub.**
+1. **Download the Extension**
+   - Visit the [LATEST RELEASE](https://github.com/le0booba/Superior_Tab_Mute/releases/latest) on GitHub and download the extension folder.
 
 2. **Load in Chrome**
-   - Navigate to `chrome://extensions/`
-   - Enable "Developer mode" (top right toggle)
-   - Click "Load unpacked"
-   - Select the extension folder
+   - Open Chrome and navigate to `chrome://extensions/`.
+   - Enable **Developer mode** (top-right toggle).
+   - Click **Load unpacked** and select the downloaded extension folder.
 
-### First Use
-1. **Choose Your Mode**: Click the extension icon and select your preferred muting strategy
-2. **Test It**: Open multiple tabs with audio content
-3. **Customize**: Set up keyboard shortcuts at `chrome://extensions/shortcuts`
+3. **Start Using**
+   - Click the extension icon in Chrome’s toolbar to access the popup and configure settings.
 
 ---
 
-## 📖 Detailed Usage Guide
+## 🌟 Features
 
-### 🎵 Active Tab Mode
-Perfect for focused work or browsing where you only want to hear the tab you're currently viewing.
+### 🎯 Smart Muting Modes
+- **Active Tab Mode**: Only the currently active tab plays audio, perfect for focused browsing or work.
+- **First Sound Mode**: Prioritizes the first tab that plays audio, ideal for music or podcasts.
+- **Whitelist Mode**: Manually select a single tab to play audio, offering precise control for complex workflows.
 
-**How it works:**
-- Only the currently active tab can play audio
-- Switching tabs automatically transfers audio permission
-- Ideal for: Work, research, focused browsing
-
-### 🎼 First Sound Mode  
-Great for music streaming or when you want one consistent audio source.
-
-**How it works:**
-- The first tab that starts playing audio becomes the "source"
-- All other tabs are muted automatically
-- Use the "Refresh Source" button to reassign to the current tab
-- Ideal for: Music streaming, podcasts, background audio
-
-### 📋 Whitelist Mode
-Maximum control for complex audio setups or specific workflows.
-
-**How it works:**
-- Manually select which single tab should play audio
-- All other tabs remain muted until you change the selection
-- Perfect granular control over your audio experience
-- Ideal for: Multiple audio sources, complex workflows, presentations
-
-### 🔇 Global Mute
-Emergency silence for any situation.
-
----
+### ⚡ Instant Controls
+- **Master Toggle**: Enable or disable the extension with a single click or shortcut (`Alt+Shift+S`).
+- **Global Mute**: Silence all tabs instantly (`Alt+Shift+M`).
+- **Set Sound Source**: Designate the current tab as the audio source in First Sound Mode (`Alt+Shift+E`).
+- **Show All Tabs**: View and select from all tabs, not just audible ones, in First Sound and Whitelist modes.
 
 <details>
-<summary>⌨️ Keyboard Shortcuts</summary>
+<summary>🔧 Customize Behavior</summary>
 
-| Shortcut | Action | Customizable |
-|----------|--------|--------------|
-| `Alt+Shift+S` | Toggle extension on/off | ✅ |
-| `Alt+Shift+M` | Mute/unmute all tabs | ✅ |
-| `Alt+Shift+E` | Set Current Tab as Sound `SOURCE` | ✅ |
+- Toggle the extension on/off or mute all tabs using the switches or shortcuts.
+- In First Sound Mode, click “Refresh Source” to set the current tab as the audio source.
+- Configure keyboard shortcuts at `chrome://extensions/shortcuts`:
+  - `Alt+Shift+S`: Toggle extension on/off.
+  - `Alt+Shift+M`: Mute/unmute all tabs.
+  - `Alt+Shift+E`: Set current tab as sound source (First Sound Mode).
 
 </details>
 
-**Customize shortcuts:**
-1. Go to `chrome://extensions/shortcuts`
-2. Find "Superior Tab Mute"
-3. Click the pencil icon to edit
-4. Set your preferred key combinations
+<details>
+<summary>🎨 User-Friendly Interface</summary>
 
----
+- **Dynamic Status Icons**: The extension icon reflects the current state (active, muted, or disabled).
+- **Real-Time Tab List**: Displays tabs with audio or all tabs, with favicon and title previews.
+- **Bilingual Support**: Switch between English and Russian via the popup’s language buttons.
+- **Dark Theme**: A modern, eye-friendly design for prolonged use.
+
+</details>
 
 <details>
-<summary>🎨 Visual Indicators</summary>
+<summary>🔍 Advanced Functionality</summary>
 
-The extension icon changes to show the current state:
-
-| Icon | Meaning |
-|------|---------|
-| 🎧 **Gray** | Extension active, normal operation |
-| 🎧 **Gray with Red Cross** | All tabs muted |
-| 🎧 **Red** | Extension disabled |
+- **Persistent Settings**: Preferences sync across devices using Chrome’s storage API.
+- **Safe Handling**: Ignores Chrome system pages (`chrome://`) to prevent conflicts.
+- **Error Recovery**: Automatically handles closed tabs and updates settings dynamically.
 
 </details>
 
 ---
 
-### File Structure
+## 📖 Usage Guide
+
+1. **Open the Popup**
+   - Click the Superior Tab Mute icon in Chrome’s toolbar to access the control panel.
+
+2. **Select a Mode**
+   - Choose **Active Tab**, **First Sound**, or **Whitelist** mode via radio buttons.
+   - For First Sound or Whitelist modes, use the tab list to select the audio source or enable “Show all tabs” for more options.
+
+---
+
+## 🔒 Permissions & Security
+
+### Privacy Commitment
+
+- **No Data Collection**: The extension does not collect, store, or transmit any personal data.
+- **No Analytics**: No tracking or external server communication.
+- **Local Operation**: All functionality runs locally within Chrome.
+
+<details>
+<summary>Permissions Used</summary>
+
+- **tabs**: Required to detect and control tab audio and manage muting.
+- **storage**: Saves user preferences locally for consistent behavior across sessions.
+
+</details>
+
+<details>
+<summary>Synced Settings (chrome.storage.sync)</summary>
+
+- Stored in your Google account and synchronized across devices when signed into Chrome.
+- **isExtensionEnabled** (true/false): Controls whether the extension is active.
+- **mode** ('active', 'first-sound', 'whitelist'): Defines the active muting mode.
+- **isAllMuted** (true/false): Toggles global mute for all tabs.
+- Ensures consistent core behavior across all your devices.
+
+</details>
+
+<details>
+<summary>Session Storage (chrome.storage.session)</summary>
+
+- Temporary settings cleared when Chrome closes.
+- **firstAudibleTabId** (tab ID): Tracks the audio source tab in First Sound Mode.
+- **whitelistedTabId** (tab ID): Tracks the selected tab in Whitelist Mode.
+- Stored temporarily as tab IDs are unique to each browser session and invalid across devices or restarts.
+
+</details>
+
+<details>
+<summary>Local Storage (localStorage)</summary>
+
+- Persistent on the device, not synced.
+- **stm_lang** ('en'/'ru'): Language preference for the interface.
+- **showAllTabsFirstSound** (true/false): Toggles “Show all tabs” in First Sound Mode.
+- **showAllTabsWhitelist** (true/false): Toggles “Show all tabs” in Whitelist Mode.
+- Allows device-specific UI preferences, such as different settings for work and home computers.
+
+</details>
+
+---
+
+## 📁 File Structure
+
 ```
 Superior_Tab_Mute/
 ├── 📑 manifest.json         # Extension configuration
-├── 🔧 background.js         # Core muting logic & event handling
+├── 🔧 background.js         # Core muting logic and event handling
 ├── ⚙️ popup.html            # User interface structure
-├── ⚙️ popup.js              # Interface logic & user interactions
+├── ⚙️ popup.js              # Interface logic and user interactions
 ├── 🎨 popup.css             # Modern dark theme styling
 ├── 🗁 icons/                # Status indicator icons
 │   ├── 🖼️ icon16.png           # Normal state
 │   ├── 🖼️ icon16_off.png       # Disabled state
-│   └── 🖼️ icon16_mute.png      # All muted state
-└── 🖺 README.md                # This documentation
+│   ├── 🖼️ icon16_mute.png      # All muted state
+│   ├── 🖼️ icon48.png           # Normal state
+│   ├── 🖼️ icon48_off.png       # Disabled state
+│   ├── 🖼️ icon48_mute.png      # All muted state
+│   ├── 🖼️ icon128.png          # Normal state
+│   ├── 🖼️ icon128_off.png      # Disabled state
+│   └── 🖼️ icon128_mute.png     # All muted state
+└── 🖺 README.md             # This documentation
 ```
 
 ---
 
-## 🔒 Privacy & Security
-
-### Data Collection: **NONE**
-- ❌ No analytics or tracking
-- ❌ No data sent to external servers  
-- ❌ No personal information collected
-
-### Permissions Used
-- **`tabs`**: Required to mute/unmute tabs and detect audio
-- **`storage`**: Saves your preferences locally
-
----
-
-## 🐛 Troubleshooting
-
-### Common Issues & Solutions
-
-#### Extension Not Muting Tabs
-- **Check**: Extension is enabled (icon should be colored, not gray)
-- **Check**: Correct mode is selected in the popup
-- **Note**: Chrome system pages (`chrome://`) cannot be muted due to browser restrictions
-
-#### Keyboard Shortcuts Not Working  
-- **Check**: No conflicting shortcuts at `chrome://extensions/shortcuts`
-- **Try**: Different key combinations if current ones conflict with other software
-- **Restart**: Chrome after changing shortcuts
-
-#### Tabs Not Appearing in Lists
-- **Enable**: "Show all tabs" option for full tab visibility
-- **Refresh**: The popup to update the tab list
-- **Check**: Tabs aren't Chrome system pages
-
-#### Icon Not Updating
-- **Reload**: Extension at `chrome://extensions/`
-- **Restart**: Chrome browser
-- **Check**: Extension has necessary permissions
-
----
-
 <div align="center">
-<sup>⭐ Enjoy the extension? Give it a star!</sup>
 
-`© badrenton 2025`
+⭐ Enjoying Superior Tab Mute? Star the repository on GitHub!
+
+© badrenton 2025
+
 </div>
