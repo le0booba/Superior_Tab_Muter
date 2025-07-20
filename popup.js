@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const qs = sel => document.querySelector(sel);
+    const manifest = chrome.runtime.getManifest();
 
     const locales = {
         en: {
@@ -36,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let currentLang = localStorage.getItem('stm_lang') || 'en';
-    const t = key => locales[currentLang][key] || locales['en'][key];
+    const t = key => locales[currentLang][key] || locales.en[key];
 
     const controlsWrapper = qs('#controls-wrapper');
     const firstSoundControls = qs('#first-sound-controls');
@@ -46,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-locale]').forEach(el => {
             el.textContent = t(el.dataset.locale);
         });
-        const manifest = chrome.runtime.getManifest();
         qs('#version-info').textContent = `${manifest.name} v${manifest.version}`;
         qs('#author-info').textContent = `${t('by')} badrenton`;
         qs('#github-link').textContent = t('github');
@@ -55,15 +55,28 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderTabsList({ container, tabs, selectedId }) {
         container.innerHTML = '';
         if (tabs.length === 0) {
-            container.innerHTML = `<li class="no-sound">${t('noTabs')}</li>`;
+            const li = document.createElement('li');
+            li.className = 'no-sound';
+            li.textContent = t('noTabs');
+            container.appendChild(li);
             return;
         }
 
         const fragment = document.createDocumentFragment();
         tabs.forEach(tab => {
             const li = document.createElement('li');
+            li.className = 'tab-list-item';
             li.dataset.tabId = tab.id;
-            li.innerHTML = `<img src="${tab.favIconUrl || 'icons/icon16.png'}" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;"> <span>${tab.title || 'Untitled Tab'}</span>`;
+
+            const img = document.createElement('img');
+            img.className = 'tab-list-icon';
+            img.src = tab.favIconUrl || 'icons/icon16.png';
+            
+            const span = document.createElement('span');
+            span.textContent = tab.title || 'Untitled Tab';
+
+            li.appendChild(img);
+            li.appendChild(span);
             if (tab.id === selectedId) li.classList.add('selected');
             fragment.appendChild(li);
         });
@@ -79,13 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const tabs = (await chrome.tabs.query(query)).filter(t => t.id && !t.url.startsWith('chrome://') && !t.url.startsWith('chrome-extension://'));
 
         listElem.onclick = (e) => {
-            const li = e.target.closest('li');
+            const li = e.target.closest('.tab-list-item');
             if (!li || !li.dataset.tabId) return;
 
             const tabId = parseInt(li.dataset.tabId, 10);
             onSelect(tabId);
-            listElem.querySelector('.selected')?.classList.remove('selected');
-            li.classList.add('selected');
         };
 
         renderTabsList({ container: listElem, tabs, selectedId });
@@ -99,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (firstAudibleTabId) {
             try {
                 const tab = await chrome.tabs.get(firstAudibleTabId);
-                display.innerHTML = `<img src="${tab.favIconUrl || 'icons/icon16.png'}" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;">${t('sourcePrefix')} ${tab.title}`;
+                display.innerHTML = `<img src="${tab.favIconUrl || 'icons/icon16.png'}" class="tab-list-icon"><span>${t('sourcePrefix')} ${tab.title}</span>`;
                 display.classList.add('active');
             } catch {
                 display.textContent = t('sourceClosed');
@@ -135,21 +146,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mode === 'first-sound') setupFirstSoundControls();
         else if (mode === 'whitelist') setupWhitelistControls();
     }
-
+    
     function attachEventListeners() {
         qs('#master-toggle-switch').onchange = e => {
-            const isEnabled = e.target.checked;
-            chrome.storage.sync.set({ isExtensionEnabled: isEnabled });
-            controlsWrapper.classList.toggle('disabled', !isEnabled);
+            chrome.storage.sync.set({ isExtensionEnabled: e.target.checked });
         };
 
         qs('#mute-all-toggle-switch').onchange = e => chrome.storage.sync.set({ isAllMuted: e.target.checked });
 
         qs('#mode-form').onchange = e => {
             if (e.target.name === 'mode') {
-                const newMode = e.target.value;
-                chrome.storage.sync.set({ mode: newMode });
-                updateUIVisibility(newMode);
+                chrome.storage.sync.set({ mode: e.target.value });
             }
         };
 
@@ -157,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (activeTab) {
                 await chrome.storage.session.set({ firstAudibleTabId: activeTab.id });
-                setupFirstSoundControls();
             }
         };
 
@@ -171,12 +177,35 @@ document.addEventListener('DOMContentLoaded', () => {
             setupWhitelistControls();
         };
 
-        qs('.lang-switcher').onclick = (e) => {
+        qs('.lang-switcher').onclick = e => {
             const btn = e.target.closest('.lang-btn');
             if (btn) {
                 switchLanguage(btn.id === 'lang-ru' ? 'ru' : 'en');
             }
         };
+
+        chrome.storage.onChanged.addListener((changes, area) => {
+            const currentMode = qs('input[name="mode"]:checked')?.value;
+            if (changes.isExtensionEnabled) {
+                const isEnabled = changes.isExtensionEnabled.newValue;
+                qs('#master-toggle-switch').checked = isEnabled;
+                controlsWrapper.classList.toggle('disabled', !isEnabled);
+            }
+            if (changes.isAllMuted) {
+                qs('#mute-all-toggle-switch').checked = changes.isAllMuted.newValue;
+            }
+            if (changes.mode) {
+                const newMode = changes.mode.newValue;
+                qs(`input[name="mode"][value="${newMode}"]`).checked = true;
+                updateUIVisibility(newMode);
+            }
+            if (changes.whitelistedTabId && currentMode === 'whitelist') {
+                setupWhitelistControls();
+            }
+            if (changes.firstAudibleTabId && currentMode === 'first-sound') {
+                setupFirstSoundControls();
+            }
+        });
     }
 
     function switchLanguage(lang) {
@@ -185,25 +214,27 @@ document.addEventListener('DOMContentLoaded', () => {
         qs('#lang-en').classList.toggle('active', lang === 'en');
         qs('#lang-ru').classList.toggle('active', lang === 'ru');
         localizeUI();
-        const currentMode = qs('input[name="mode"]:checked').value;
-        updateUIVisibility(currentMode);
+        updateUIVisibility(qs('input[name="mode"]:checked').value);
     }
 
     async function init() {
-        const data = await chrome.storage.sync.get(['mode', 'isExtensionEnabled', 'isAllMuted']);
-        const isEnabled = data.isExtensionEnabled !== false;
+        const {
+            mode = 'active',
+            isExtensionEnabled = true,
+            isAllMuted = false
+        } = await chrome.storage.sync.get(['mode', 'isExtensionEnabled', 'isAllMuted']);
 
-        qs('#master-toggle-switch').checked = isEnabled;
-        qs('#mute-all-toggle-switch').checked = data.isAllMuted === true;
-        controlsWrapper.classList.toggle('disabled', !isEnabled);
-        qs(`input[name="mode"][value="${data.mode || 'active'}"]`).checked = true;
+        qs('#master-toggle-switch').checked = isExtensionEnabled;
+        qs('#mute-all-toggle-switch').checked = isAllMuted;
+        controlsWrapper.classList.toggle('disabled', !isExtensionEnabled);
+        qs(`input[name="mode"][value="${mode}"]`).checked = true;
 
         qs('#lang-en').classList.toggle('active', currentLang === 'en');
         qs('#lang-ru').classList.toggle('active', currentLang === 'ru');
 
         localizeUI();
         attachEventListeners();
-        updateUIVisibility(data.mode);
+        updateUIVisibility(mode);
     }
 
     init();

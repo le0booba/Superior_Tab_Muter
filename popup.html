@@ -10,7 +10,7 @@
     <div class="container">
         <div class="header">
             <div class="header-icon-title">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <circle cx="12" cy="12" r="12" fill="#27ae60"/>
                     <path d="M6 17v-2a6 6 0 0 1 12 0v2" stroke="#fff" stroke-width="2" fill="none"/>
                     <rect x="4" y="15" width="4" height="6" rx="2" fill="#fff"/>
@@ -20,7 +20,7 @@
             <div class="app-info">
                 <span id="version-info"></span>
                 <span id="author-info"></span>
-                <a id="github-link" href="https://github.com/le0booba/Superior_Tab_Mute" target="_blank"></a>
+                <a id="github-link" href="https://github.com/le0booba/Superior_Tab_Mute" target="_blank" rel="noopener noreferrer"></a>
             </div>
         </div>
 
@@ -44,11 +44,12 @@
                 <span class="toggle-label" data-locale="muteAll"></span>
             </label>
 
-            <form id="mode-form">
+            <fieldset id="mode-form">
+                <legend class="sr-only">Muting Mode</legend>
                 <label><input type="radio" name="mode" value="active"><span data-locale="modeActive"></span></label>
                 <label><input type="radio" name="mode" value="first-sound"><span data-locale="modeFirstSound"></span></label>
                 <label><input type="radio" name="mode" value="whitelist"><span data-locale="modeWhitelist"></span></label>
-            </form>
+            </fieldset>
 
             <div id="first-sound-controls" class="hidden">
                 <button id="refresh-first-sound-btn" data-locale="refreshSource"></button>
@@ -68,7 +69,6 @@
                 </label>
                 <ul id="audible-tabs-list"></ul>
             </div>
-
         </div>
     </div>
     <script src="popup.js"></script>

@@ -23,14 +23,15 @@ const setMute = (tabs, mute) => Promise.all(
         if (tab.mutedInfo && tab.mutedInfo.muted !== mute) {
             return chrome.tabs.update(tab.id, { muted: mute }).catch(() => {});
         }
-        return null;
     })
 );
 
-async function applyMutingRules() {
-    const s = await getSettings();
-    const allTabs = await chrome.tabs.query({});
-    
+async function applyMutingRules(activeTabId = null) {
+    const [s, allTabs] = await Promise.all([
+        getSettings(),
+        chrome.tabs.query({})
+    ]);
+
     const manageableTabs = allTabs.filter(tab => tab.id && !tab.url.startsWith('chrome://') && !tab.url.startsWith('chrome-extension://'));
 
     if (!s.isExtensionEnabled) {
@@ -41,45 +42,76 @@ async function applyMutingRules() {
     }
 
     let tabToUnmuteId = null;
+    const allTabsById = new Map(allTabs.map(t => [t.id, t]));
 
     switch (s.mode) {
         case 'active':
-            const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (activeTab) {
-                tabToUnmuteId = activeTab.id;
+            if (activeTabId) {
+                tabToUnmuteId = activeTabId;
+            } else {
+                const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+                if (activeTab) tabToUnmuteId = activeTab.id;
             }
             break;
         case 'first-sound':
-            const firstAudibleTabExists = s.firstAudibleTabId && allTabs.some(t => t.id === s.firstAudibleTabId);
-            if (firstAudibleTabExists) {
+            if (s.firstAudibleTabId && allTabsById.has(s.firstAudibleTabId)) {
                 tabToUnmuteId = s.firstAudibleTabId;
-            } else {
-                const [firstAudible] = await chrome.tabs.query({ audible: true });
-                if (firstAudible) {
-                    tabToUnmuteId = firstAudible.id;
-                    await chrome.storage.session.set({ firstAudibleTabId: tabToUnmuteId });
-                }
             }
             break;
         case 'whitelist':
-            if (s.whitelistedTabId && allTabs.some(t => t.id === s.whitelistedTabId)) {
+            if (s.whitelistedTabId && allTabsById.has(s.whitelistedTabId)) {
                 tabToUnmuteId = s.whitelistedTabId;
             }
             break;
     }
 
+    const tabsToMute = [];
+    const tabsToUnmute = [];
+    for (const tab of manageableTabs) {
+        if (tab.id === tabToUnmuteId) {
+            tabsToUnmute.push(tab);
+        } else {
+            tabsToMute.push(tab);
+        }
+    }
+
     await Promise.all([
-        setMute(manageableTabs.filter(t => t.id !== tabToUnmuteId), true),
-        setMute(manageableTabs.filter(t => t.id === tabToUnmuteId), false),
+        setMute(tabsToMute, true),
+        setMute(tabsToUnmute, false),
     ]);
 }
 
-chrome.tabs.onActivated.addListener(applyMutingRules);
-
-chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-    if ('audible' in changeInfo) {
-        applyMutingRules();
+chrome.tabs.onActivated.addListener(async ({ tabId }) => {
+    const s = await getSettings();
+    if (s.isExtensionEnabled && s.mode === 'first-sound' && !s.firstAudibleTabId) {
+        try {
+            const activatedTab = await chrome.tabs.get(tabId);
+            if (activatedTab && activatedTab.audible) {
+                await chrome.storage.session.set({ firstAudibleTabId: activatedTab.id });
+                return;
+            }
+        } catch (e) {}
     }
+    applyMutingRules(tabId);
+});
+
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
+    if (!('audible' in changeInfo)) {
+        return;
+    }
+
+    if (changeInfo.audible === true) {
+        const s = await getSettings();
+        if (s.isExtensionEnabled && s.mode === 'first-sound' && !s.firstAudibleTabId) {
+            const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            if (activeTab && activeTab.id === tabId) {
+                await chrome.storage.session.set({ firstAudibleTabId: tabId });
+                return;
+            }
+        }
+    }
+
+    applyMutingRules();
 });
 
 chrome.tabs.onRemoved.addListener(async (tabId) => {
@@ -87,14 +119,26 @@ chrome.tabs.onRemoved.addListener(async (tabId) => {
     if (!s.isExtensionEnabled) return;
 
     if (s.mode === 'first-sound' && tabId === s.firstAudibleTabId) {
-        await chrome.storage.session.remove('firstAudibleTabId');
+        const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (activeTab && activeTab.audible) {
+            await chrome.storage.session.set({ firstAudibleTabId: activeTab.id });
+        } else {
+            await chrome.storage.session.remove('firstAudibleTabId');
+        }
     } else if (s.mode === 'whitelist' && tabId === s.whitelistedTabId) {
         await chrome.storage.session.remove('whitelistedTabId');
     }
 });
 
-chrome.storage.onChanged.addListener((changes, area) => {
+chrome.storage.onChanged.addListener(async (changes, area) => {
     if (area !== 'sync' && area !== 'session') return;
+
+    if (changes.mode && changes.mode.newValue === 'first-sound' && !changes.mode.oldValue) {
+        const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (activeTab && activeTab.audible) {
+            await chrome.storage.session.set({ firstAudibleTabId: activeTab.id });
+        }
+    }
 
     const ruleTriggers = ['mode', 'isExtensionEnabled', 'isAllMuted', 'firstAudibleTabId', 'whitelistedTabId'];
     if (ruleTriggers.some(key => key in changes)) {
@@ -123,19 +167,23 @@ async function updateExtensionIcon() {
     chrome.action.setIcon({ path: paths[iconSet] });
 }
 
-chrome.commands?.onCommand.addListener(async (command) => {
+chrome.commands.onCommand.addListener(async (command) => {
     const { isExtensionEnabled, isAllMuted, mode } = await getSettings();
-    if (command === 'toggle-extension') {
-        await chrome.storage.sync.set({ isExtensionEnabled: !isExtensionEnabled });
-    } else if (command === 'toggle-mute-all') {
-        await chrome.storage.sync.set({ isAllMuted: !isAllMuted });
-    } else if (command === 'set-current-tab-source') {
-        if (mode === 'first-sound') {
-            const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (activeTab) {
-                await chrome.storage.session.set({ firstAudibleTabId: activeTab.id });
+    switch (command) {
+        case 'toggle-extension':
+            await chrome.storage.sync.set({ isExtensionEnabled: !isExtensionEnabled });
+            break;
+        case 'toggle-mute-all':
+            await chrome.storage.sync.set({ isAllMuted: !isAllMuted });
+            break;
+        case 'set-current-tab-source':
+            if (mode === 'first-sound') {
+                const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+                if (activeTab) {
+                    await chrome.storage.session.set({ firstAudibleTabId: activeTab.id });
+                }
             }
-        }
+            break;
     }
 });
 
