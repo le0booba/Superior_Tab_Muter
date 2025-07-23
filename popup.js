@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
         if (tabs.length === 0) {
             const li = document.createElement('li');
-            li.className = 'no-sound';
+            li.className = 'tab-list-item no-sound';
             li.textContent = t('noTabs');
             container.appendChild(li);
             return;
@@ -71,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const img = document.createElement('img');
             img.className = 'tab-list-icon';
             img.src = tab.favIconUrl || 'icons/icon16.png';
-            
+            img.alt = '';
+
             const span = document.createElement('span');
             span.textContent = tab.title || 'Untitled Tab';
 
@@ -92,11 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const tabs = (await chrome.tabs.query(query)).filter(t => t.id && !t.url.startsWith('chrome://') && !t.url.startsWith('chrome-extension://'));
 
         listElem.onclick = (e) => {
-            const li = e.target.closest('.tab-list-item');
-            if (!li || !li.dataset.tabId) return;
-
-            const tabId = parseInt(li.dataset.tabId, 10);
-            onSelect(tabId);
+            const li = e.target.closest('.tab-list-item:not(.no-sound)');
+            if (!li?.dataset.tabId) return;
+            onSelect(parseInt(li.dataset.tabId, 10));
         };
 
         renderTabsList({ container: listElem, tabs, selectedId });
@@ -110,9 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (firstAudibleTabId) {
             try {
                 const tab = await chrome.tabs.get(firstAudibleTabId);
-                display.innerHTML = `<img src="${tab.favIconUrl || 'icons/icon16.png'}" class="tab-list-icon"><span>${t('sourcePrefix')} ${tab.title}</span>`;
+                display.innerHTML = `<img src="${tab.favIconUrl || 'icons/icon16.png'}" class="tab-list-icon" alt=""><span>${t('sourcePrefix')} ${tab.title}</span>`;
                 display.classList.add('active');
-            } catch {
+            } catch (error) {
                 display.textContent = t('sourceClosed');
                 display.classList.add('error');
             }
@@ -146,45 +145,47 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mode === 'first-sound') setupFirstSoundControls();
         else if (mode === 'whitelist') setupWhitelistControls();
     }
-    
+
     function attachEventListeners() {
-        qs('#master-toggle-switch').onchange = e => {
+        qs('#master-toggle-switch').addEventListener('change', e => {
             chrome.storage.sync.set({ isExtensionEnabled: e.target.checked });
-        };
+        });
 
-        qs('#mute-all-toggle-switch').onchange = e => chrome.storage.sync.set({ isAllMuted: e.target.checked });
+        qs('#mute-all-toggle-switch').addEventListener('change', e => {
+            chrome.storage.sync.set({ isAllMuted: e.target.checked });
+        });
 
-        qs('#mode-form').onchange = e => {
+        qs('#mode-form').addEventListener('change', e => {
             if (e.target.name === 'mode') {
                 chrome.storage.sync.set({ mode: e.target.value });
             }
-        };
+        });
 
-        qs('#refresh-first-sound-btn').onclick = async () => {
+        qs('#refresh-first-sound-btn').addEventListener('click', async () => {
             const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (activeTab) {
                 await chrome.storage.session.set({ firstAudibleTabId: activeTab.id });
             }
-        };
+        });
 
-        qs('#show-all-tabs-first-sound').onchange = e => {
+        qs('#show-all-tabs-first-sound').addEventListener('change', e => {
             localStorage.setItem('showAllTabsFirstSound', e.target.checked);
             setupFirstSoundControls();
-        };
+        });
 
-        qs('#show-all-tabs-whitelist').onchange = e => {
+        qs('#show-all-tabs-whitelist').addEventListener('change', e => {
             localStorage.setItem('showAllTabsWhitelist', e.target.checked);
             setupWhitelistControls();
-        };
+        });
 
-        qs('.lang-switcher').onclick = e => {
+        qs('.lang-switcher').addEventListener('click', e => {
             const btn = e.target.closest('.lang-btn');
             if (btn) {
                 switchLanguage(btn.id === 'lang-ru' ? 'ru' : 'en');
             }
-        };
+        });
 
-        chrome.storage.onChanged.addListener((changes, area) => {
+        chrome.storage.onChanged.addListener((changes) => {
             const currentMode = qs('input[name="mode"]:checked')?.value;
             if (changes.isExtensionEnabled) {
                 const isEnabled = changes.isExtensionEnabled.newValue;
@@ -218,23 +219,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function init() {
-        const {
-            mode = 'active',
-            isExtensionEnabled = true,
-            isAllMuted = false
-        } = await chrome.storage.sync.get(['mode', 'isExtensionEnabled', 'isAllMuted']);
+        const settings = await chrome.storage.sync.get({
+            mode: 'active',
+            isExtensionEnabled: true,
+            isAllMuted: false
+        });
 
-        qs('#master-toggle-switch').checked = isExtensionEnabled;
-        qs('#mute-all-toggle-switch').checked = isAllMuted;
-        controlsWrapper.classList.toggle('disabled', !isExtensionEnabled);
-        qs(`input[name="mode"][value="${mode}"]`).checked = true;
+        qs('#master-toggle-switch').checked = settings.isExtensionEnabled;
+        qs('#mute-all-toggle-switch').checked = settings.isAllMuted;
+        controlsWrapper.classList.toggle('disabled', !settings.isExtensionEnabled);
+        qs(`input[name="mode"][value="${settings.mode}"]`).checked = true;
 
         qs('#lang-en').classList.toggle('active', currentLang === 'en');
         qs('#lang-ru').classList.toggle('active', currentLang === 'ru');
 
         localizeUI();
         attachEventListeners();
-        updateUIVisibility(mode);
+        updateUIVisibility(settings.mode);
     }
 
     init();

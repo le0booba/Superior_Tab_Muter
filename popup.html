@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <header class="header">
             <div class="header-icon-title">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <circle cx="12" cy="12" r="12" fill="#27ae60"/>
@@ -22,11 +22,11 @@
                 <span id="author-info"></span>
                 <a id="github-link" href="https://github.com/le0booba/Superior_Tab_Mute" target="_blank" rel="noopener noreferrer"></a>
             </div>
-        </div>
+        </header>
 
         <div class="lang-switcher">
-            <button class="lang-btn" id="lang-en">🇺🇸</button>
-            <button class="lang-btn" id="lang-ru">🇷🇺</button>
+            <button class="lang-btn" id="lang-en" type="button">🇺🇸</button>
+            <button class="lang-btn" id="lang-ru" type="button">🇷🇺</button>
         </div>
 
         <div class="master-toggle-container">
@@ -52,7 +52,7 @@
             </fieldset>
 
             <div id="first-sound-controls" class="hidden">
-                <button id="refresh-first-sound-btn" data-locale="refreshSource"></button>
+                <button id="refresh-first-sound-btn" data-locale="refreshSource" type="button"></button>
                 <div id="current-sound-source-display"></div>
                 <label class="show-all-tabs-label">
                     <input type="checkbox" id="show-all-tabs-first-sound">

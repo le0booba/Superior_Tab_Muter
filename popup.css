@@ -20,6 +20,7 @@ body {
     width: 260px;
     background: var(--bg-main);
     color: var(--text-primary);
+    margin: 0;
 }
 
 .sr-only {
@@ -205,6 +206,8 @@ input[type="radio"] {
     text-overflow: ellipsis;
     min-height: 16px;
     margin-bottom: 4px;
+    display: flex;
+    align-items: center;
 }
 
 #current-sound-source-display.active {
@@ -270,10 +273,13 @@ h4 {
 .no-sound {
     font-style: italic;
     color: var(--text-muted);
-    cursor: default !important;
+    cursor: default;
     padding: 8px 12px;
-    border-bottom: none !important;
-    background: none !important;
+    border-bottom: none;
+}
+
+.tab-list-item.no-sound:hover {
+    background: transparent;
 }
 
 #github-link {
@@ -311,6 +317,6 @@ h4 {
 }
 
 .lang-btn.active {
-    background: var(--bg-secondary);
+    background: var(--accent-primary);
     color: var(--toggle-handle);
 }
